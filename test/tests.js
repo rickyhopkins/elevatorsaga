@@ -1,20 +1,17 @@
-
-
 var timeForwarder = function(dt, stepSize, fn) {
 	var accumulated = 0.0;
-	while(accumulated < dt) {
+	while (accumulated < dt) {
 		accumulated += stepSize;
 		fn(stepSize);
 	}
 };
 
 describe("Elevator Saga", function() {
-
 	var handlers = null;
 	beforeEach(function() {
 		handlers = {
-			someHandler: function() { },
-			someOtherHandler: function() { }
+			someHandler: function() {},
+			someOtherHandler: function() {},
 		};
 		$.each(handlers, function(key, value) {
 			spyOn(handlers, key).and.callThrough();
@@ -28,7 +25,9 @@ describe("Elevator Saga", function() {
 			m = new Movable();
 		});
 		it("disallows incorrect creation", function() {
-			var faultyCreation = function () { Movable(); };
+			var faultyCreation = function() {
+				Movable();
+			};
 			expect(faultyCreation).toThrow();
 		});
 		it("updates display position when told to", function() {
@@ -99,7 +98,9 @@ describe("Elevator Saga", function() {
 		it("moves to destination over time", function() {
 			//obj.moveToOverTime = function(newX, newY, timeToSpend, interpolator, cb) {
 			m.moveToOverTime(2.0, 3.0, 10.0, handlers.someHandler);
-			timeForwarder(10.0, 0.1, function(dt) { m.update(dt) });
+			timeForwarder(10.0, 0.1, function(dt) {
+				m.update(dt);
+			});
 			expect(m.x).toBe(2.0);
 			expect(m.y).toBe(3.0);
 			expect(handlers.someHandler).toHaveBeenCalled();
@@ -114,7 +115,12 @@ describe("Elevator Saga", function() {
 		var DT_MAX = 1000.0 / 59;
 		beforeEach(function() {
 			controller = createWorldController(DT_MAX);
-			fakeWorld = { update: function(dt) {}, init: function() {}, updateDisplayPositions: function() {}, trigger: function() {} };
+			fakeWorld = {
+				update: function(dt) {},
+				init: function() {},
+				updateDisplayPositions: function() {},
+				trigger: function() {},
+			};
 			fakeWorld = riot.observable(fakeWorld);
 			fakeCodeObj = { init: function() {}, update: function() {} };
 			frameRequester = createFrameRequester(10.0);
@@ -147,14 +153,13 @@ describe("Elevator Saga", function() {
 		});
 	});
 
-
 	describe("Challenge requirements", function() {
 		var fakeWorld = null;
 		beforeEach(function() {
 			fakeWorld = { elapsedTime: 0.0, transportedCounter: 0, maxWaitTime: 0.0, moveCount: 0 };
 		});
 
-		describe("requireUserCountWithinTime", function (){
+		describe("requireUserCountWithinTime", function() {
 			it("evaluates correctly", function() {
 				var challengeReq = requireUserCountWithinTime(10, 5.0);
 				expect(challengeReq.evaluate(fakeWorld)).toBe(null);
@@ -166,7 +171,7 @@ describe("Elevator Saga", function() {
 				expect(challengeReq.evaluate(fakeWorld)).toBe(true);
 			});
 		});
-		describe("requireUserCountWithMaxWaitTime", function (){
+		describe("requireUserCountWithMaxWaitTime", function() {
 			it("evaluates correctly", function() {
 				var challengeReq = requireUserCountWithMaxWaitTime(10, 4.0);
 				expect(challengeReq.evaluate(fakeWorld)).toBe(null);
@@ -178,7 +183,7 @@ describe("Elevator Saga", function() {
 				expect(challengeReq.evaluate(fakeWorld)).toBe(true);
 			});
 		});
-		describe("requireUserCountWithinMoves", function (){
+		describe("requireUserCountWithinMoves", function() {
 			it("evaluates correctly", function() {
 				var challengeReq = requireUserCountWithinMoves(10, 20);
 				expect(challengeReq.evaluate(fakeWorld)).toBe(null);
@@ -190,20 +195,20 @@ describe("Elevator Saga", function() {
 				expect(challengeReq.evaluate(fakeWorld)).toBe(true);
 			});
 		});
-	        describe("requireUserCountWithinTimeWithMaxWaitTime", function(){
-	                it("evaluates correctly", function() {
-	                        var challengeReq = requireUserCountWithinTimeWithMaxWaitTime(10, 5.0, 4.0);
-	                        expect(challengeReq.evaluate(fakeWorld)).toBe(null);
-	                        fakeWorld.elapsedTime = 5.1;
-	                        expect(challengeReq.evaluate(fakeWorld)).toBe(false);
-	                        fakeWorld.transportedCounter = 11;
-	                        expect(challengeReq.evaluate(fakeWorld)).toBe(false);
-	                        fakeWorld.elapsedTime = 4.9;
-	                        expect(challengeReq.evaluate(fakeWorld)).toBe(true);
-	                        fakeWorld.maxWaitTime = 4.1;
-	                        expect(challengeReq.evaluate(fakeWorld)).toBe(false);
-	                });
-	        });
+		describe("requireUserCountWithinTimeWithMaxWaitTime", function() {
+			it("evaluates correctly", function() {
+				var challengeReq = requireUserCountWithinTimeWithMaxWaitTime(10, 5.0, 4.0);
+				expect(challengeReq.evaluate(fakeWorld)).toBe(null);
+				fakeWorld.elapsedTime = 5.1;
+				expect(challengeReq.evaluate(fakeWorld)).toBe(false);
+				fakeWorld.transportedCounter = 11;
+				expect(challengeReq.evaluate(fakeWorld)).toBe(false);
+				fakeWorld.elapsedTime = 4.9;
+				expect(challengeReq.evaluate(fakeWorld)).toBe(true);
+				fakeWorld.maxWaitTime = 4.1;
+				expect(challengeReq.evaluate(fakeWorld)).toBe(false);
+			});
+		});
 	});
 
 	describe("Elevator object", function() {
@@ -217,10 +222,13 @@ describe("Elevator Saga", function() {
 		});
 
 		it("moves to floors specified", function() {
-			_.each(_.range(0, floorCount-1), function(floor) {
+			_.each(_.range(0, floorCount - 1), function(floor) {
 				e.goToFloor(floor);
-				timeForwarder(10.0, 0.015, function(dt) {e.update(dt); e.updateElevatorMovement(dt);});
-				var expectedY = (floorHeight * (floorCount-1)) - floorHeight*floor;
+				timeForwarder(10.0, 0.015, function(dt) {
+					e.update(dt);
+					e.updateElevatorMovement(dt);
+				});
+				var expectedY = floorHeight * (floorCount - 1) - floorHeight * floor;
 				expect(e.y).toBe(expectedY);
 				expect(e.currentFloor).toBe(floor, "Floor num");
 			});
@@ -230,10 +238,16 @@ describe("Elevator Saga", function() {
 			expect(e.currentFloor).toBe(0);
 			var originalY = e.y;
 			e.goToFloor(1);
-			timeForwarder(0.2, 0.015, function(dt) {e.update(dt); e.updateElevatorMovement(dt);});
+			timeForwarder(0.2, 0.015, function(dt) {
+				e.update(dt);
+				e.updateElevatorMovement(dt);
+			});
 			expect(e.y).not.toBe(originalY);
 			e.goToFloor(0);
-			timeForwarder(10.0, 0.015, function(dt) {e.update(dt); e.updateElevatorMovement(dt);});
+			timeForwarder(10.0, 0.015, function(dt) {
+				e.update(dt);
+				e.updateElevatorMovement(dt);
+			});
 			expect(e.y).toBe(originalY);
 			expect(e.currentFloor).toBe(0);
 		});
@@ -262,26 +276,34 @@ describe("Elevator Saga", function() {
 		it("reports pressed floor buttons", function() {
 			e.pressFloorButton(2);
 			e.pressFloorButton(3);
-			expect(e.getPressedFloors()).toEqual([2,3]);
+			expect(e.getPressedFloors()).toEqual([2, 3]);
 		});
-
 
 		it("reports not approaching floor 0 when going up from floor 0", function() {
 			e.goToFloor(1);
-			timeForwarder(0.01, 0.015, function(dt) {e.update(dt); e.updateElevatorMovement(dt);});
+			timeForwarder(0.01, 0.015, function(dt) {
+				e.update(dt);
+				e.updateElevatorMovement(dt);
+			});
 			expect(e.isApproachingFloor(0)).toBe(false);
 		});
 
 		it("reports approaching floor 2 when going up from floor 0", function() {
 			e.goToFloor(1);
-			timeForwarder(0.01, 0.015, function(dt) {e.update(dt); e.updateElevatorMovement(dt);});
+			timeForwarder(0.01, 0.015, function(dt) {
+				e.update(dt);
+				e.updateElevatorMovement(dt);
+			});
 			expect(e.isApproachingFloor(2)).toBe(true);
 		});
 
 		it("reports approaching floor 2 when going down from floor 3", function() {
 			e.setFloorPosition(3);
 			e.goToFloor(2);
-			timeForwarder(0.01, 0.015, function(dt) {e.update(dt); e.updateElevatorMovement(dt);});
+			timeForwarder(0.01, 0.015, function(dt) {
+				e.update(dt);
+				e.updateElevatorMovement(dt);
+			});
 			expect(e.isApproachingFloor(2)).toBe(true);
 		});
 
@@ -291,14 +313,20 @@ describe("Elevator Saga", function() {
 				console.log("Passing floor yo", floorNum, direction);
 			});
 			e.goToFloor(1);
-			timeForwarder(10.0, 0.015, function(dt) {e.update(dt); e.updateElevatorMovement(dt);});
+			timeForwarder(10.0, 0.015, function(dt) {
+				e.update(dt);
+				e.updateElevatorMovement(dt);
+			});
 			expect(e.currentFloor).toBe(1);
 			expect(handlers.someHandler).not.toHaveBeenCalled();
 		});
 		it("emits passing floor event when going from floor 0 to 2", function() {
 			e.on("passing_floor", handlers.someHandler);
 			e.goToFloor(2);
-			timeForwarder(10.0, 0.015, function(dt) {e.update(dt); e.updateElevatorMovement(dt);});
+			timeForwarder(10.0, 0.015, function(dt) {
+				e.update(dt);
+				e.updateElevatorMovement(dt);
+			});
 			expect(e.currentFloor).toBe(2);
 			expect(handlers.someHandler.calls.count()).toEqual(1);
 			expect(handlers.someHandler.calls.mostRecent().args.slice(0, 1)).toEqual([1]);
@@ -306,7 +334,10 @@ describe("Elevator Saga", function() {
 		it("emits passing floor events when going from floor 0 to 3", function() {
 			e.on("passing_floor", handlers.someHandler);
 			e.goToFloor(3);
-			timeForwarder(10.0, 0.015, function(dt) {e.update(dt); e.updateElevatorMovement(dt);});
+			timeForwarder(10.0, 0.015, function(dt) {
+				e.update(dt);
+				e.updateElevatorMovement(dt);
+			});
 			expect(e.currentFloor).toBe(3);
 			expect(handlers.someHandler.calls.count()).toEqual(2);
 			expect(handlers.someHandler.calls.argsFor(0).slice(0, 1)).toEqual([1]);
@@ -315,7 +346,10 @@ describe("Elevator Saga", function() {
 		it("emits passing floor events when going from floor 3 to 0", function() {
 			e.on("passing_floor", handlers.someHandler);
 			e.goToFloor(3);
-			timeForwarder(10.0, 0.015, function(dt) {e.update(dt); e.updateElevatorMovement(dt);});
+			timeForwarder(10.0, 0.015, function(dt) {
+				e.update(dt);
+				e.updateElevatorMovement(dt);
+			});
 			expect(e.currentFloor).toBe(3);
 			expect(handlers.someHandler.calls.count()).toEqual(2);
 			expect(handlers.someHandler.calls.argsFor(0).slice(0, 1)).toEqual([1]);
@@ -330,12 +364,15 @@ describe("Elevator Saga", function() {
 				e.goToFloor(e.getExactFutureFloorIfStopped());
 			});
 			e.goToFloor(2);
-			timeForwarder(3.0, 0.01401, function(dt) {e.update(dt); e.updateElevatorMovement(dt);});
+			timeForwarder(3.0, 0.01401, function(dt) {
+				e.update(dt);
+				e.updateElevatorMovement(dt);
+			});
 			expect(passingFloorEventCount).toBeGreaterThan(0, "event count");
 			expect(e.getExactCurrentFloor()).toBeLessThan(1.15, "current floor");
 		});
 
-		it("doesnt seem to overshoot when stopping at floors", function() {
+		it("doesnt seem to overshoot when stopping at floors", function() {
 			_.each(_.range(60, 120, 2.32133), function(updatesPerSecond) {
 				var STEPSIZE = 1.0 / updatesPerSecond;
 				e.setFloorPosition(1);
@@ -347,19 +384,15 @@ describe("Elevator Saga", function() {
 				});
 				expect(e.getExactCurrentFloor()).toEqual(3.0);
 			});
-
-
 		});
-
 	});
-
 
 	describe("API", function() {
 		describe("Elevator interface", function() {
 			var e = null;
 			var elevInterface = null;
 			beforeEach(function() {
-				e =  new Elevator(1.5, 4, 40);
+				e = new Elevator(1.5, 4, 40);
 				e.setFloorPosition(0);
 				elevInterface = asElevatorInterface({}, e, 4);
 			});
@@ -398,15 +431,24 @@ describe("Elevator Saga", function() {
 			it("stops when told told to stop", function() {
 				var originalY = e.y;
 				elevInterface.goToFloor(2);
-				timeForwarder(10, 0.015, function(dt) {e.update(dt); e.updateElevatorMovement(dt);});
+				timeForwarder(10, 0.015, function(dt) {
+					e.update(dt);
+					e.updateElevatorMovement(dt);
+				});
 				expect(e.y).not.toBe(originalY);
 
 				elevInterface.goToFloor(0);
-				timeForwarder(0.2, 0.015, function(dt) {e.update(dt); e.updateElevatorMovement(dt);});
+				timeForwarder(0.2, 0.015, function(dt) {
+					e.update(dt);
+					e.updateElevatorMovement(dt);
+				});
 				var whenMovingY = e.y;
 
 				elevInterface.stop();
-				timeForwarder(10, 0.015, function(dt) {e.update(dt); e.updateElevatorMovement(dt);});
+				timeForwarder(10, 0.015, function(dt) {
+					e.update(dt);
+					e.updateElevatorMovement(dt);
+				});
 				expect(e.y).not.toBe(whenMovingY);
 				expect(e.y).not.toBe(originalY);
 			});
@@ -450,10 +492,16 @@ describe("Elevator Saga", function() {
 			});
 
 			it("normalizes load factor", function() {
-				var fnNewUser = function(){ return {weight:_.random(55, 100)}; },
-					fnEnterElevator = function(user){ e.userEntering(user); };
+				var fnNewUser = function() {
+						return { weight: random(55, 100) };
+					},
+					fnEnterElevator = function(user) {
+						e.userEntering(user);
+					};
 
-				_.chain(_.range(20)).map(fnNewUser).forEach(fnEnterElevator);
+				_.chain(_.range(20))
+					.map(fnNewUser)
+					.forEach(fnEnterElevator);
 				var load = elevInterface.loadFactor();
 				expect(load >= 0 && load <= 1).toBeTruthy();
 			});
@@ -469,7 +517,10 @@ describe("Elevator Saga", function() {
 					expect(floorNum).toBe(1, "floor being passed");
 					elevInterface.stop();
 				});
-				timeForwarder(3.0, 0.01401, function(dt) {e.update(dt); e.updateElevatorMovement(dt);});
+				timeForwarder(3.0, 0.01401, function(dt) {
+					e.update(dt);
+					e.updateElevatorMovement(dt);
+				});
 				expect(passingFloorEventCount).toBeGreaterThan(0);
 			});
 		});
